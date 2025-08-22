@@ -25,3 +25,5 @@
  - ripgrep
  - fd
  - unziP
+ - podman
+ - buildah
