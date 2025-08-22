@@ -18,11 +18,12 @@ sudo systemctl enable apparmor.service
 
 ## Example - Firefox
 
-Check for a profile
+Check for a profile, or copy the custom one to the app armor directory
 
 ```bash
 sudo aa-status | grep firefox
-ls /etc/apparmor.d/ | grep firefox
+sudo mkdir -p /etc/apparmor.d/local
+sudo cp ./arch_setup/apparmor/usr.bin.firefox /etc/apparmor.d/local
 ```
 
 If profile exists, but is disabled, enable it.
@@ -39,6 +40,7 @@ sudo aa-status | grep firefox
 ```
 If the application crashes or cannot open, set mode to complain and check the journal for issues.
 Troubleshoot issues until the application performs satisfactorily.
+Once everything is good, then enforce the profile.
 
 ```bash
 sudo aa-complain /etc/apparmor.d/usr.bin.firefox
