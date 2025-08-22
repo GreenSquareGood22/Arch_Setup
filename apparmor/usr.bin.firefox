@@ -1,0 +1,96 @@
+# /etc/apparmor.d/local/usr.bin.firefox
+#include <tunables/global>
+
+profile firefox /usr/lib/firefox/firefox {
+  #include <abstractions/base>
+  #include <abstractions/audio>
+  #include <abstractions/dbus-session-strict>
+  #include <abstractions/fonts>
+  #include <abstractions/freedesktop.org>
+  #include <abstractions/nameservice>
+  #include <abstractions/openssl>
+  #include <abstractions/user-tmp>
+  #include <abstractions/X>
+
+  # Capabilities
+  capability sys_admin,
+  capability sys_chroot,
+  capability setgid,
+  capability setuid,
+
+  # Network access
+  network inet dgram,
+  network inet stream,
+  network inet6 dgram,
+  network inet6 stream,
+  network netlink raw,
+
+  # Firefox binary and libraries
+  /usr/bin/firefox rix,
+  /usr/lib/firefox/ r,
+  /usr/lib/firefox/** mr,
+  /usr/lib/libstdc++.so.6 mr,
+  /usr/lib/x86_64-linux-gnu/libstdc++.so.6 mr,
+  /lib/x86_64-linux-gnu/libstdc++.so.6 mr,
+
+  # System libraries
+  /lib/x86_64-linux-gnu/lib*.so* mr,
+  /usr/lib/x86_64-linux-gnu/lib*.so* mr,
+  /usr/lib/lib*.so* mr,
+
+  # Configuration and data directories
+  owner @{HOME}/.mozilla/ rw,
+  owner @{HOME}/.mozilla/** rwk,
+  owner @{HOME}/.cache/mozilla/ rw,
+  owner @{HOME}/.cache/mozilla/** rwk,
+
+  # Downloads directory
+  owner @{HOME}/Downloads/ r,
+  owner @{HOME}/Downloads/** rw,
+
+  # Desktop and Documents access (restrictive)
+  #owner @{HOME}/Desktop/ r,
+  #owner @{HOME}/Documents/ r,
+  #owner @{HOME}/Pictures/ r,
+
+  # Temporary files
+  owner /tmp/.org.chromium.Chromium.* rw,
+  owner /tmp/firefox_* rw,
+  /tmp/ r,
+
+  # System information
+  /proc/sys/kernel/yama/ptrace_scope r,
+  /proc/*/stat r,
+  /proc/*/statm r,
+  /proc/*/status r,
+  /proc/*/task/*/stat r,
+  /proc/sys/vm/overcommit_memory r,
+  /sys/devices/system/cpu/present r,
+
+  # Hardware acceleration
+  /dev/dri/ r,
+  /dev/dri/card* rw,
+  /dev/dri/renderD* rw,
+
+  # Audio/Video
+  /dev/snd/ r,
+  /dev/snd/* rw,
+  /dev/video* rw,
+
+  # Deny dangerous operations
+  deny /bin/** x,
+  deny /sbin/** x,
+  deny /usr/bin/** x,
+  deny /usr/sbin/** x,
+  deny @{HOME}/.ssh/ rw,
+  deny @{HOME}/.gnupg/ rw,
+
+  # Allow specific executables Firefox needs
+  /usr/bin/firefox ix,
+  /usr/lib/firefox/firefox-bin ix,
+
+  # Plugin directories
+  /usr/lib/mozilla/plugins/ r,
+  /usr/lib/mozilla/plugins/** mr,
+}
+
