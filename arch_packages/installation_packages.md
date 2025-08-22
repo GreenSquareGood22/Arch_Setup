@@ -1,7 +1,6 @@
 # Package Names
  - sddm
  - linux-firmware-amdgpu
- - neovim
  - hyprland
  - git
  - github-cli
@@ -19,3 +18,10 @@
  - nftables
  - wireguard-tools
  - go
+ - neovim
+ - gcc
+ - make
+ - git
+ - ripgrep
+ - fd
+ - unziP
